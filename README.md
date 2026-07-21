@@ -1,7 +1,6 @@
 # Mainframe skills
 
-Agent skills from [Mainframe](https://github.com/mainframecomputer), in the open
-[Agent Skills format](https://agentskills.io).
+Agent skills used by the Mainframe team.
 
 ## Install
 
@@ -9,24 +8,12 @@ Agent skills from [Mainframe](https://github.com/mainframecomputer), in the open
 npx skills add mainframecomputer/skills
 ```
 
-## review-as
+## /review-as
 
-Learn how a GitHub user reviews code from a year of their real review comments, then
-review a change as that person ([SKILL.md](skills/review-as/SKILL.md)) — your own
-style ("review this as me") or a teammate's ("how would `<login>` review this PR?").
-Chat only: it never posts to GitHub or modifies the change.
+- `/review-as` reviews any PR like you would — flagging the things you care about. It does this by first learning your code review style by privately examining your past year of GitHub comments. E.g. `/review-as myself https://github.com/mainframecomputer/async/pull/992.`
+- What's cool is that you can also run this on behalf of your teammate. For example, run `/review-as jordan` to learn what your coworker Jordan might say about your PR.
 
-It gathers history through your authenticated [`gh` CLI](https://cli.github.com)
-(GitHub.com only) and writes profiles to `.claude/review-as/` in the repo under review
-— committable, so your team shares them — or `~/.claude/review-as/` for the cross-repo
-scope. Scripts run on [bun](https://bun.sh).
-
-### Example profile
-
-The real profile review-as built for [@vincentmvdm](https://github.com/vincentmvdm)
-from a year of review history in `mainframecomputer/async` — committed there, so the
-whole team can review as him:
-
+Here's an example code review profile for Vincent. Once it's built, the skill uses this profile to review any PR.
 ```markdown
 ---
 login: vincentmvdm
