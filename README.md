@@ -3,6 +3,12 @@
 Agent skills from [Mainframe](https://github.com/mainframecomputer), in the open
 [Agent Skills format](https://agentskills.io).
 
+## Install
+
+```sh
+npx skills add mainframecomputer/skills
+```
+
 ## review-as
 
 Learn how a GitHub user reviews code from a year of their real review comments, then
@@ -58,12 +64,6 @@ Effectively never blocks: 146 of 147 submissions are APPROVED (almost all empty-
 - Most review volume is their reviewing agent-written code on their own PRs; peer review of human teammates is a small minority (early 2026-03/04 era).
 - Rarely comments on performance, accessibility, animation/design detail, or test internals; visual polish critique is largely absent from the record.
 - Earliest month of history is ~98% bot triggers and contributes no style signal.
-```
-
-## Install
-
-```sh
-npx skills add mainframecomputer/skills
 ```
 
 ## License
