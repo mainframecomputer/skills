@@ -162,11 +162,16 @@ Review the change on the merits, then let the profile pick what surfaces: which
 findings this person would raise, how severe they would rate them, and how they would
 word each comment. Verify every finding against the actual code before including it.
 
-Present one coherent review in chat: the likely disposition (`APPROVE`, `COMMENT`, or
-`REQUEST_CHANGES` per their thresholds), a summary in their voice, then each finding
-with a `file:line` anchor and the comment as they would write it. If you found a
-serious defect the profile says they would miss, append it after the review, clearly
-marked as outside the persona.
+Present one coherent review in chat, built to scan in seconds:
+
+- The likely disposition (`APPROVE`, `COMMENT`, or `REQUEST_CHANGES` per their
+  thresholds) and a summary in their voice — two or three sentences, no more.
+- Then the findings as a bulleted list, most severe first: one bullet per finding,
+  leading with the `file:line` anchor, then the comment as they would write it,
+  trimmed to its point. No preamble, no headers per finding, no walls of text —
+  the persona shapes the wording, not the length.
+- If you found a serious defect the profile says they would miss, append it after
+  the review as one clearly marked out-of-persona bullet.
 
 ## 5. Report
 
