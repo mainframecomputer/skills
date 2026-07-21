@@ -18,6 +18,13 @@ In Claude Code, install through the plugin marketplace:
 
 ```text
 /plugin marketplace add mainframecomputer/skills
+/plugin install review-as@mainframe-skills
+```
+
+With any agent supported by the [skills CLI](https://skills.sh):
+
+```sh
+npx skills add mainframecomputer/skills
 ```
 
 Or copy (or symlink) a skill's folder into your agent's skill directory — for Claude

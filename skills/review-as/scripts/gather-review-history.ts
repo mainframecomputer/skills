@@ -66,7 +66,8 @@ const restReviewSchema = z.object({
   id: z.number().int(),
   body: z.string().nullable(),
   state: reviewStateSchema,
-  submitted_at: z.string().datetime().nullable(),
+  // Pending (draft) reviews carry a null submitted_at or omit the field.
+  submitted_at: z.string().datetime().nullish(),
   html_url: z.string().url(),
 });
 
@@ -341,6 +342,10 @@ async function searchPage(query: string, page: number, limitations: string[]) {
         `q=${query}`,
         "-F",
         "advanced_search=true",
+        "-f",
+        "sort=updated",
+        "-f",
+        "order=desc",
         "-F",
         `per_page=${SEARCH_PAGE_SIZE}`,
         "-F",
@@ -537,7 +542,7 @@ export function buildReviewHistory(
       // around inline comments, which are collected separately.
       if (
         review.state === "PENDING" ||
-        review.submitted_at === null ||
+        review.submitted_at == null ||
         !isWithinWindow(review.submitted_at) ||
         (body.trim() === "" &&
           review.state !== "APPROVED" &&
@@ -586,7 +591,11 @@ export function buildReviewHistory(
     }
   }
 
-  items.sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+  items.sort(
+    (left, right) =>
+      right.createdAt.localeCompare(left.createdAt) ||
+      left.url.localeCompare(right.url),
+  );
 
   const count = (kind: ReviewHistoryItem["kind"]): number =>
     items.filter((item) => item.kind === kind).length;

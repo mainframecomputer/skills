@@ -1,13 +1,16 @@
 {
   "name": "review-as-scripts",
-  "version": "0.1.0",
-  "license": "MIT",
-  "type": "module",
   "private": true,
   "scripts": {
-    "gather": "bun install --no-summary && bun gather-review-history.ts"
+    "gather": "bun install --production --no-summary && bun gather-review-history.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "^5"
   }
 }

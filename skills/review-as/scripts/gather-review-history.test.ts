@@ -44,6 +44,12 @@ const activity: PullRequestActivity = {
       submitted_at: "2026-01-03T02:00:00Z",
       html_url: "https://github.com/mainframecomputer/async/pull/12#pullrequestreview-3",
     },
+    {
+      id: 4,
+      body: "Draft thoughts, not submitted.",
+      state: "PENDING",
+      html_url: "https://github.com/mainframecomputer/async/pull/12#pullrequestreview-4",
+    },
   ],
   inlineComments: [
     {
@@ -286,6 +292,33 @@ describe("buildReviewHistory", () => {
     if (reply?.kind === "inline_review_comment") {
       expect(reply.diffHunk.startsWith("… (hunk truncated)")).toBe(true);
     }
+  });
+
+  it("breaks createdAt ties by url so output is deterministic", () => {
+    const tied = structuredClone(activity);
+    tied.issueComments = [
+      {
+        id: 22,
+        body: "B side of the tie.",
+        created_at: "2026-01-02T00:00:00Z",
+        html_url: "https://github.com/mainframecomputer/async/pull/12#issuecomment-22",
+      },
+      {
+        id: 21,
+        body: "A side of the tie.",
+        created_at: "2026-01-02T00:00:00Z",
+        html_url: "https://github.com/mainframecomputer/async/pull/12#issuecomment-21",
+      },
+    ];
+
+    const urls = buildReviewHistory([tied], buildOptions)
+      .items.filter((item) => item.kind === "pull_request_comment")
+      .map((item) => item.url);
+
+    expect(urls).toEqual([
+      "https://github.com/mainframecomputer/async/pull/12#issuecomment-21",
+      "https://github.com/mainframecomputer/async/pull/12#issuecomment-22",
+    ]);
   });
 
   it("carries limitations through to coverage", () => {

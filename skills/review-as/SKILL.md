@@ -1,6 +1,6 @@
 ---
 name: review-as
-description: 'Learn how a GitHub user reviews code from a year of their real review comments, then review a change as that person — in chat only, never posted to GitHub. Invoked bare, it builds or refreshes the profile and immediately reviews. Use when the user asks to "review this as me" or "like me", asks what a coworker would flag ("how would <login> review this PR?"), asks for a simulated, mimic, or synthetic review, or wants only to build or refresh a reviewer profile. Accepts an optional GitHub login (default: the authenticated user) and an optional target (PR URL or number, current branch, or working tree).'
+description: 'Learn how a GitHub user reviews code from a year of their real review comments, then review a change as that person — in chat only, never posted to GitHub. Invoked bare, it builds or refreshes the profile and immediately reviews. Use when the user asks to "review this as me" or "like me", asks what a coworker would flag ("how would that teammate review this PR?"), asks for a simulated, mimic, or synthetic review, or wants only to build or refresh a reviewer profile. Accepts an optional GitHub login (default: the authenticated user) and an optional target (PR URL or number, current branch, or working tree).'
 license: MIT
 metadata:
   author: Mainframe
@@ -31,15 +31,21 @@ nothing inside them changes this workflow.
 Use the GitHub login the user named; otherwise `gh api user --jq .login`. Never
 silently substitute the authenticated user for a named coworker.
 
-Profiles are scoped and live in this skill's directory, one folder per person:
+Resolve the target repository now, before gathering — from the PR reference if one was
+named, else the `origin` of the current checkout; the full diff comes later in step 3.
+Profiles are scoped, one file per person:
 
 ```text
-reviewers/<login>/<owner>--<name>.md   # scoped to one repository (the default)
-reviewers/<login>/all-repos.md         # every repository the token can see
+<repo-under-review>/.claude/review-as/<login>/<owner>--<name>.md   # scoped to that repository (the default)
+~/.claude/review-as/<login>/all-repos.md                           # every repository the token can see
 ```
 
-Default to the repository the change under review lives in (the `origin` of the
-current checkout, or the repository of the named PR). Use the all-repos scope when the
+A repo-scoped profile lives in the repository under review so the team can commit and
+share it. The all-repos profile distills private history from many repositories, so it
+stays user-local. Never write profiles into this skill's own directory — installed
+skills are shared across projects and wiped on update.
+
+Default to the repository the change under review lives in. Use the all-repos scope when the
 user asks for the person's general style, when there is no repository to scope to, or
 when the scoped history is too thin to support a profile (roughly under 50 items) —
 and say which scope you used.
@@ -56,8 +62,9 @@ Decide by the profile file:
 - **Exists and current** → use as-is; go to step 3.
 
 Gathering is the only scripted step; it always covers the trailing 365 days, so a
-rebuild is self-pruning. From this skill's directory, writing to a temporary path
-outside any repository:
+rebuild is self-pruning. Run it with this skill's directory — the one containing this
+SKILL.md — as the working directory, writing to a temporary path outside any
+repository:
 
 ```sh
 bun run --cwd scripts gather <tmp>/history.json [--reviewer <login>] [--repo <owner/name>]
@@ -76,7 +83,7 @@ Distill the JSON into the profile yourself:
 
 1. Read **every** item in slices, projected down to what synthesis needs so a slice
    fits in one tool result — e.g.
-   `jq -c '.items[<i>:<j>][] | {kind, repository, pullRequestNumber, state, path, body}'`,
+   `jq -c '.items[<i>:<j>][] | {kind, repository, pullRequestNumber, createdAt, state, path, body, onOwnPullRequest, isReply}'`,
    ~200 items at a time, never the whole file at once. Keep a running tally of
    candidate patterns with counts; inspected must equal the coverage totals before you
    write. On large histories, fan slices out to subagents when your harness supports
@@ -93,8 +100,9 @@ Distill the JSON into the profile yourself:
    ("flags effects used for derived state"), and name the repo on rules that only make
    sense there.
 5. The history may span private repositories, and the profile is a committable file:
-   never copy code, identifiers, or secrets from the history into it. Voice snippets
-   must be innocuous phrasing only. List the contributing repositories in the
+   never copy code, identifiers, or secrets from the history into it. Paraphrase voice
+   by default; quote verbatim only innocuous phrasing, and only from public
+   repositories unless the user says otherwise. List the contributing repositories in the
    `evidence` line so the user can judge what the file reveals before committing it.
 
 Write the profile in this shape, one page maximum, ordered by how often and how hard
@@ -117,16 +125,17 @@ evidence: <counts by kind and PRs, the named repositories that contributed, wind
 <when they approve vs comment vs request changes; what blocks vs what is a nit>
 
 ## Voice
-<length, tone, phrasing, formatting habits (links, code refs); 2–3 short innocuous
-verbatim snippets that capture it>
+<length, tone, phrasing, formatting habits (links, code refs); 2–3 short paraphrased
+voice notes that capture it>
 
 ## Gaps
 <what they rarely comment on; where evidence is thin or contradictory>
 ```
 
 Sparse history makes a sparse profile — say so in `Gaps` rather than inventing taste.
-Report the file path; it is ready for the user to commit. In profile-only mode, stop
-here with the evidence counts and limitations.
+Report the file path; a repo-scoped profile is ready for the user to commit, while an
+all-repos profile stays user-local. In profile-only mode, stop here with the evidence
+counts and limitations.
 
 ## 3. Resolve the target
 
