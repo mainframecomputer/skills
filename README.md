@@ -6,25 +6,32 @@ scripts it bundles) — usable from Claude Code, Codex, and other skill-aware ag
 
 ## Skills
 
-- **[review-as](skills/review-as/SKILL.md)** — learn how a GitHub user reviews code
-  from up to a year of their real review comments, then review a change as that
-  person. Works for your own style ("review this as me") or a teammate's ("how would
-  `<login>` review this PR?"). It predicts what someone would likely flag — it never
-  impersonates them anywhere, and the review stays in chat.
+- [review-as](#review-as) — review a change the way you — or any teammate — would,
+  learned from real review comments.
 
-  What it reads and writes: it reads the reviewer's visible GitHub review activity
-  through your authenticated `gh` token (which can include private repositories the
-  token can see), writes the raw history to a temporary file, and distills a profile
-  into the repository under review (`.claude/review-as/…`, committable and shareable
-  with your team) or into `~/.claude/review-as/` for the cross-repo scope. It never
-  posts to GitHub and never modifies the change under review.
+## review-as
+
+Learn how a GitHub user reviews code from up to a year of their real review comments,
+then review a change as that person ([SKILL.md](skills/review-as/SKILL.md)). Works for
+your own style ("review this as me") or a teammate's ("how would `<login>` review this
+PR?"). It predicts what someone would likely flag — it never impersonates them
+anywhere, and the review stays in chat.
+
+What it reads and writes: it reads the reviewer's visible GitHub review activity
+through your authenticated `gh` token (which can include private repositories the
+token can see), writes the raw history to a temporary file, and distills a profile
+into the repository under review (`.claude/review-as/…`, committable and shareable
+with your team) or into `~/.claude/review-as/` for the cross-repo scope. It never
+posts to GitHub and never modifies the change under review.
 
 ### Example profile
 
-This is a real profile review-as built for [@vincentmvdm](https://github.com/vincentmvdm)
-from a year of review history in `mainframecomputer/async`. It was written to
-`.claude/review-as/vincentmvdm/mainframecomputer--async.md` in that repo and committed, so
-the whole team can review as him:
+What review-as produces: the real profile it built for
+[@vincentmvdm](https://github.com/vincentmvdm) from a year of review history in
+`mainframecomputer/async`, written to
+`.claude/review-as/vincentmvdm/mainframecomputer--async.md` in that repo and
+committed, so the whole team can review as him. Reviews then surface findings this
+profile says he would raise, worded the way he would raise them.
 
 ```markdown
 ---
