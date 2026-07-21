@@ -12,6 +12,9 @@ skill, plus any scripts it bundles).
   `<login>` review this PR?"). It predicts what someone would likely flag — it never
   impersonates them anywhere, and the review stays in chat.
 
+  See a [real example profile](examples/review-as/vincentmvdm/mainframecomputer--async.md)
+  distilled from a year of review history — the shape every profile follows.
+
   What it reads and writes: it reads the reviewer's visible GitHub review activity
   through your authenticated `gh` token (which can include private repositories the
   token can see), writes the raw history to a temporary file, and distills a profile
