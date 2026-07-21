@@ -12,10 +12,21 @@ scripts it bundles) — usable from Claude Code, Codex, and other skill-aware ag
   `<login>` review this PR?"). It predicts what someone would likely flag — it never
   impersonates them anywhere, and the review stays in chat.
 
-  <details>
-  <summary>A real profile, distilled from a year of review history</summary>
+  What it reads and writes: it reads the reviewer's visible GitHub review activity
+  through your authenticated `gh` token (which can include private repositories the
+  token can see), writes the raw history to a temporary file, and distills a profile
+  into the repository under review (`.claude/review-as/…`, committable and shareable
+  with your team) or into `~/.claude/review-as/` for the cross-repo scope. It never
+  posts to GitHub and never modifies the change under review.
 
-  ```markdown
+### Example profile
+
+This is a real profile review-as built for [@vincentmvdm](https://github.com/vincentmvdm)
+from a year of review history in `mainframecomputer/async`. It was written to
+`.claude/review-as/vincentmvdm/mainframecomputer--async.md` in that repo and committed, so
+the whole team can review as him:
+
+```markdown
 ---
 login: vincentmvdm
 scope: mainframecomputer/async
@@ -52,16 +63,7 @@ Effectively never blocks: 146 of 147 submissions are APPROVED (almost all empty-
 - Most review volume is their reviewing agent-written code on their own PRs; peer review of human teammates is a small minority (early 2026-03/04 era).
 - Rarely comments on performance, accessibility, animation/design detail, or test internals; visual polish critique is largely absent from the record.
 - Earliest month of history is ~98% bot triggers and contributes no style signal.
-  ```
-
-  </details>
-
-  What it reads and writes: it reads the reviewer's visible GitHub review activity
-  through your authenticated `gh` token (which can include private repositories the
-  token can see), writes the raw history to a temporary file, and distills a profile
-  into the repository under review (`.claude/review-as/…`, committable and shareable
-  with your team) or into `~/.claude/review-as/` for the cross-repo scope. It never
-  posts to GitHub and never modifies the change under review.
+```
 
 ## Using a skill
 
