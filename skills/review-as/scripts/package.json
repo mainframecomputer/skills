@@ -2,7 +2,7 @@
   "name": "review-as-scripts",
   "private": true,
   "scripts": {
-    "gather": "bun install --production --no-summary && bun gather-review-history.ts",
+    "gather": "bun install --production --frozen-lockfile --no-summary && bun gather-review-history.ts",
     "test": "bun test",
     "typecheck": "tsc --noEmit"
   },

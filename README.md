@@ -7,10 +7,17 @@ skill, plus any scripts it bundles).
 ## Skills
 
 - **[review-as](skills/review-as/SKILL.md)** — learn how a GitHub user reviews code
-  from a year of their real review comments, then review a change as that person.
-  Works for your own style ("review this as me") or a teammate's ("how would
-  `<login>` review this PR?"). The review stays in chat — nothing is ever posted to
-  GitHub.
+  from up to a year of their real review comments, then review a change as that
+  person. Works for your own style ("review this as me") or a teammate's ("how would
+  `<login>` review this PR?"). It predicts what someone would likely flag — it never
+  impersonates them anywhere, and the review stays in chat.
+
+  What it reads and writes: it reads the reviewer's visible GitHub review activity
+  through your authenticated `gh` token (which can include private repositories the
+  token can see), writes the raw history to a temporary file, and distills a profile
+  into the repository under review (`.claude/review-as/…`, committable and shareable
+  with your team) or into `~/.claude/review-as/` for the cross-repo scope. It never
+  posts to GitHub and never modifies the change under review.
 
 ## Using a skill
 

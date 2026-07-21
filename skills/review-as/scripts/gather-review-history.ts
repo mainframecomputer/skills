@@ -19,7 +19,7 @@
 // gh CLI; run via `bun run gather`, which installs dependencies first.
 
 import { execFile } from "node:child_process";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import process from "node:process";
 import { promisify } from "node:util";
@@ -422,19 +422,26 @@ async function discoverPullRequests(
   windowEndMs: number,
   limitations: string[],
 ): Promise<PullRequestRef[]> {
-  const repoQualifiers = repos.map((repo) => ` repo:${repo}`).join("");
+  // Advanced search ANDs repeated repo: qualifiers together, so each repo
+  // needs its own query; dedupe reconciles the overlap.
+  const repoQualifiers =
+    repos.length === 0 ? [""] : repos.map((repo) => ` repo:${repo}`);
   const refs: PullRequestRef[] = [];
   for (const qualifier of ["reviewed-by", "commenter"]) {
-    console.error(`Searching pull requests (${qualifier}:${reviewer})…`);
-    refs.push(
-      ...(await searchSlice(
-        `type:pr ${qualifier}:${reviewer}${repoQualifiers}`,
-        reviewer,
-        windowStartMs,
-        windowEndMs,
-        limitations,
-      )),
-    );
+    for (const repoQualifier of repoQualifiers) {
+      console.error(
+        `Searching pull requests (${qualifier}:${reviewer}${repoQualifier})…`,
+      );
+      refs.push(
+        ...(await searchSlice(
+          `type:pr ${qualifier}:${reviewer}${repoQualifier}`,
+          reviewer,
+          windowStartMs,
+          windowEndMs,
+          limitations,
+        )),
+      );
+    }
   }
   return dedupePullRequests(refs);
 }
@@ -683,6 +690,8 @@ async function main(): Promise<void> {
   });
 
   await mkdir(dirname(outputPath), { recursive: true, mode: 0o700 });
+  // Recreate rather than overwrite: mode only applies to newly created files.
+  await rm(outputPath, { force: true });
   await writeFile(outputPath, `${JSON.stringify(history, null, 2)}\n`, {
     encoding: "utf8",
     mode: 0o600,

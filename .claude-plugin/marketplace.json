@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "review-as",
-      "description": "Learn how a GitHub user reviews code from a year of their real review comments, then review a change as that person — in chat only, never posted to GitHub.",
+      "description": "Learn how a GitHub user reviews code from up to a year of their real review comments, then review a change as that person — in chat only, never posted to GitHub.",
       "source": "./",
       "strict": false,
       "skills": ["./skills/review-as"]
