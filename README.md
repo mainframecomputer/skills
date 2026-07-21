@@ -14,7 +14,13 @@ skill, plus any scripts it bundles).
 
 ## Using a skill
 
-Copy (or symlink) a skill's folder into your agent's skill directory — for Claude
+In Claude Code, install through the plugin marketplace:
+
+```text
+/plugin marketplace add mainframecomputer/skills
+```
+
+Or copy (or symlink) a skill's folder into your agent's skill directory — for Claude
 Code, `~/.claude/skills/` for personal use or `.claude/skills/` in a project.
 
 Bundled scripts run with [bun](https://bun.sh) and install their own pinned
