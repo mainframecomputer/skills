@@ -1,0 +1,13 @@
+{
+  "name": "review-as-scripts",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "gather": "bun install --no-summary && bun gather-review-history.ts"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  }
+}
