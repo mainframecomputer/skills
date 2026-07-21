@@ -8,7 +8,7 @@ Agent skills used by the Mainframe team.
 npx skills add mainframecomputer/skills
 ```
 
-The /review-as skill
+## The /review-as skill
 
 - `/review-as` reviews any PR like you would — flagging the things you care about. It does this by first learning your code review style by privately examining your past year of GitHub comments. E.g. `/review-as myself https://github.com/mainframecomputer/async/pull/992.`
 - What's cool is that you can also run this on behalf of your teammate. For example, run `/review-as jordan` to learn what your coworker Jordan might say about your PR.
