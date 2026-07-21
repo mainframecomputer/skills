@@ -1,6 +1,6 @@
 ---
 name: review-as
-description: 'Learn how a GitHub user reviews code from up to a year of their real review comments, then review a change as that person — in chat only, never posted to GitHub. Invoked bare, it builds or refreshes the profile and immediately reviews. Use when the user asks to "review this as me" or "like me", asks what a coworker would flag ("how would that teammate review this PR?"), asks for a simulated, mimic, or synthetic review, or wants only to build or refresh a reviewer profile. Accepts an optional GitHub login (default: the authenticated user) and an optional target (PR URL or number, current branch, or working tree).'
+description: 'Learn how a GitHub user reviews code from up to a year of their real review comments, then review a change as that person — in chat only, never posted to GitHub. Invoked bare, it ensures the profile exists and is current, then immediately reviews. Use when the user asks to "review this as me" or "like me", asks what a coworker would flag ("how would that teammate review this PR?"), asks for a simulated, mimic, or synthetic review, or wants only to build or refresh a reviewer profile. Accepts an optional GitHub login (default: the authenticated user) and an optional target (PR URL or number, current branch, or working tree).'
 license: MIT
 metadata:
   author: Mainframe
@@ -51,8 +51,9 @@ when the user asks for the person's general style, when there is no repository t
 to, when the target repository has no local checkout to hold a profile, or when a
 repo-scoped gather returns too little to support a profile (roughly under 50 items) —
 in that last case gather again without `--repo` rather than writing a sparse repo
-profile. Say which scope you used. When the reviewer is someone other than the user,
-ask before widening to all-repos: that crawls every repository the token can see.
+profile. Say which scope you used. When the reviewer is someone other than the user, ask
+before any all-repos gather — initial or fallback: it crawls every repository the
+token can see.
 
 ## 2. Build or refresh the profile
 
@@ -63,7 +64,8 @@ Decide by the profile file:
   rebuild it: gather the full window again, and use the old profile only for
   comparison — keep guidelines the fresh evidence still supports, drop ones it no
   longer does, and let recent patterns win. Tell the user what changed.
-- **Exists and current** → use as-is; go to step 3.
+- **Exists and current** → use as-is; go to step 3 (in profile-only mode, report that
+  it is current and stop).
 
 Gathering is the only scripted step; it always covers the trailing 365 days, so a
 rebuild is self-pruning. Run it with this skill's directory — the one containing this
@@ -139,8 +141,8 @@ voice notes that capture it>
 
 Sparse history makes a sparse profile — say so in `Gaps` rather than inventing taste.
 Report the file path; a repo-scoped profile is ready for the user to commit, while an
-all-repos profile stays user-local. In profile-only mode, stop here with the evidence
-counts and limitations.
+all-repos profile stays user-local. Delete the temporary history file once the profile
+is written. In profile-only mode, stop here with the evidence counts and limitations.
 
 ## 3. Resolve the target
 

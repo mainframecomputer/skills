@@ -298,7 +298,9 @@ export function pullRequestRefFromSearchItem(
 ): PullRequestRef {
   const prefix = "https://api.github.com/repos/";
   if (!item.repository_url.startsWith(prefix)) {
-    throw new Error(`Unexpected repository URL: ${item.repository_url}`);
+    throw new Error(
+      `Unexpected repository URL: ${item.repository_url} — only GitHub.com is supported, not GitHub Enterprise hosts`,
+    );
   }
   return pullRequestRefSchema.parse({
     repository: item.repository_url.slice(prefix.length),
@@ -711,5 +713,10 @@ async function main(): Promise<void> {
 }
 
 if (import.meta.main) {
-  await main();
+  try {
+    await main();
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
 }
